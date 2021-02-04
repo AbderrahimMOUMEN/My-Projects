@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    form{
+            border: 1px solid black;
+            width: 50%;
+            padding: 10px;
+    }
+    label{
+        
+        display: flex;
+        padding: 5px;
+    }
+    #d1{
+        border: 10px groove green;
+        margin: 10px; 
+        padding: 20px 2px 0 10px;
+        width: 400px;
+        height: 100px;
+    }
+</style>
+<script>
+    function validNom(){
+        var nom=document.getElementById('nom');
+        var res=document.getElementById('residence');
+        var em=document.getElementById('email');  
+        var d1=document.getElementById('d1');
+        var age=document.getElementById('age');
+        var rg=new RegExp('^[a-z]+$','g');
+        var rg1=new RegExp('^[a-z]+$','g');
+        var rg3=new RegExp('^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+(com|ma)$','g')
+        var ch1=nom.value;
+        var ch2=res.value;
+        var ch3=em.value;
+        //test de nom
+        if(ch1==""){
+            d1.innerHTML=("Saisir le nom!!");
+            return;
+        }
+        if(rg.test(ch1)==false){
+            d1.innerHTML=("Attention! vous devez entrez le Nom en lettre miniscule!");
+            return;
+        }
+        //test de résidence
+        if(ch2==""){
+            d1.innerHTML=("Saisir la Résidence!");
+            return;
+        } 
+        if(rg1.test(ch2)==false){
+            d1.innerHTML=("Attention! vous devez entrez la Résidence en Lettre iniscule!");
+            return;
+        }
+        //var rg2=new RegExp('^[a-z]+@[a-z]{3,0}\.(com|ma)$','g');
+        //test de l'email
+        if(ch3==""){
+            d1.innerHTML=("Saisir l'Email!");
+            return;
+        } 
+        if(rg3.test(ch3)==false){
+            d1.innerHTML=("Attention! Email incorrect");
+            return;
+        }
+        else{
+            
+            d1.style.background="linear-gradient(rgb(79, 79, 245),rgb(81, 228, 81),rgb(243, 243, 145))";
+        }
+        //tester age>18
+        var a=age.value;
+        if(a==""){
+            d1.innerHTML="Entrez l'age";
+            return;
+        }
+        if(age.value<18)
+            {
+                d1.innerHTML="Attention!! l'age doit etre superieur à 18ans";
+                return;
+            }
+        //test des langes
+        var check=document.getElementsByName('checkbox1');
+        var len=check.length;
+        var i,cp=0;
+        for(i=0;i<len;i++){
+            if(check[i].checked==true)
+                            {
+                                cp++;
+                                //d1.innerHTML=check[i].value;
+                            }
+            if (cp<2)
+                { 
+                    d1.innerHTML="Vouz devez choisi 2 ou plus langes"; 
+                }
+                else {
+                    d1.innerHTML="";
+                }
+        }
+       /*check.forEach( (checkbox)=>{
+            if(checkbox.checked){
+                d1.innerHTML=check.value;
+            }
+        });*/
+    }
+    function show(){
+            var nom=document.getElementById('nom');
+            var re=document.getElementById('residence');
+            var em=document.getElementById('email');
+            var s1=document.getElementById('s1');
+            var check=document.getElementsByName('checkbox1');
+            var s="";
+                var n=nom.value;
+                var res=re.value;
+                var e=em.value;
+                s="Nom : "+n+"<br/>Résidence : "+res+"<br/>Email :"+e+"<br/>Langue Parlée : ";
+                
+                let i;
+                var T=[];
+                for (i=0;i<check.length;i++){
+                    if(check[i].checked==true){
+                        s+=check[i].value+" ";
+                        T[i]=check[i].value;
+                    }
+                }
+                d1.innerHTML=s;
+                let X={nom:n,residence:res,email:e,langue:T};
+                localStorage.setItem('nomInfos',JSON.stringify(X));
+    }
+    function AfficherLocalStorage() {
+                if(localStorage.getItem!==null)
+                            {
+                                var ObjString=localStorage.getItem('nomInfos');
+                                var ObjJson=JSON.parse(ObjString); 
+                                console.log(ObjString);
+                            }
+                
+                 
+                
+        
+    }
+</script>
+</head>
+<body onload="AfficherLocalStorage()">
+    <form action="#">
+        <legend>Formulaire</legend>
+        <label for="nom">Nom: </label>
+        <input  id="nom" type="text" required><span style="color: red;">(*)</span><br>
+        <label for="residence">Résidence: </label>
+        <input id="residence" type="text" required> <br>
+        <label for="email">Email: </label>
+        <input id="email" type="email"><br>
+        <label for="age"> Age: </label>
+        <input id="age" type="number" min="18" required><br>
+        <label for=""></label>
+        <label >Langues parlée: </label>
+        <input type="checkbox" name="checkbox1" value="Arab">Ar
+        <input type="checkbox" name="checkbox1" value="Francais">Fr
+        <input type="checkbox" name="checkbox1" value="Anglais">Eng
+        <label >Profession</label>
+        <select name="" id="s1">
+            <option value="0">choisissez une option</option>
+            <option value="1">Professeur</option>
+            <option value="2">Directeur</option>
+            <option value="3">Comptable</option>
+        </select>
+        <div id="d1"></div>
+        <span style="color: red;" title="Hints">(*): Champ Obligatoire</span>
+        <label for=""></label>
+        <input type="button"onclick="validNom()" name="" id="" value="Envoyer">
+        <input type="reset" name="" id="">
+        <input type="button" value="Show Info" onclick="show()">
+    </form>
+</body>
+</html>
